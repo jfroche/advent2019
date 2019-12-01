@@ -1,0 +1,9 @@
+[general]
+# see https://jorisroovers.github.io/gitlint/rules/
+ignore=body-min-length, body-is-missing
+
+[title-max-length]
+line-length=90
+
+[body-max-line-length]
+line-length=100

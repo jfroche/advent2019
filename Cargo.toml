@@ -1,0 +1,5 @@
+[package]
+name = "advent"
+version = "0.1.0"
+authors = ["Jean-François Roche <jfroche@affinitic.be>"]
+edition = "2018"

@@ -14,4 +14,4 @@ fmt:
 	find . -name '*.rs' -exec rustfmt {} \;
 
 fetch-input:
-	http -d -o input/day$(DAY).txt https://adventofcode.com/2019/day/1/input Cookie:session=***REMOVED***
+	http -d -o input/day$(DAY).txt https://adventofcode.com/2019/day/$(DAY)/input Cookie:session=***REMOVED***

@@ -3,3 +3,7 @@ name = "advent"
 version = "0.1.0"
 authors = ["Jean-François Roche <jfroche@affinitic.be>"]
 edition = "2018"
+
+[dependencies]
+log = "0.4.8"
+env_logger = "0.7.1"

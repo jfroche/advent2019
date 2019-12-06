@@ -1,3 +1,4 @@
+use log::*;
 use std::io;
 
 #[derive(Debug, Clone)]
@@ -14,18 +15,18 @@ impl Intcode {
         }
     }
 
-    fn restore_state(&mut self) -> () {
-        self.program[1] = 12;
-        self.program[2] = 2;
+    fn restore_state(&mut self, noun: i32, verb: i32) -> () {
+        self.program[1] = noun;
+        self.program[2] = verb;
     }
 
     fn get(&self, pos: usize) -> i32 {
-        println!("getting {}", pos);
+        trace!("getting {}", pos);
         self.program[pos]
     }
 
     fn set(&mut self, pos: usize, value: i32) -> () {
-        println!("storing {} in {}", value, pos);
+        trace!("storing {} in {}", value, pos);
         self.program[pos] = value
     }
 
@@ -42,11 +43,11 @@ impl Intcode {
             let result;
             let _ = match op {
                 Some(1) => {
-                    println!("{} + {}", left, right);
+                    trace!("{} + {}", left, right);
                     result = left + right;
                 },
                 Some(2) => {
-                    println!("{} * {}", left, right);
+                    trace!("{} * {}", left, right);
                     result = left * right;
                 },
                 Some(99) => break,
@@ -89,13 +90,32 @@ mod tests {
     }
 }
 
+fn run(code: String, noun: i32, verb: i32) -> i32 {
+    let mut program = Intcode::new(code);
+    program.restore_state(noun, verb);
+    program.run()
+}
+
 fn main() {
+    advent::init_logging();
     let mut buffer = String::new();
     io::stdin()
         .read_line(&mut buffer)
         .expect("Failed to read input !");
-    let mut program = Intcode::new(buffer);
-    program.restore_state();
-    let result = program.run();
-    println!("Step 1 first item: {}", result);
+    let mut result = run(buffer.clone(), 12, 2);
+    info!("Step 1 first item: {}", result);
+    for noun in 0..99 {
+        for verb in 0..99 {
+            result = run(buffer.clone(), noun, verb);
+            if result == 19690720 {
+                info!(
+                    "Step 2 noun: {} verb: {}, 100*noun+verb: {}",
+                    noun,
+                    verb,
+                    100 * noun + verb
+                );
+                break;
+            }
+        }
+    }
 }

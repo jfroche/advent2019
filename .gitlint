@@ -1,6 +1,6 @@
 [general]
 # see https://jorisroovers.github.io/gitlint/rules/
-ignore=body-min-length, body-is-missing
+ignore=body-min-length, body-is-missing, title-trailing-punctuation
 
 [title-max-length]
 line-length=90

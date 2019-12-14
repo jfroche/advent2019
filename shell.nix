@@ -29,8 +29,11 @@ in pkgs.mkShell rec {
     pkgs.carnix
     pkgs.httpie
     gitAndTools.pre-commit
+    pkgs.rustracer
   ];
   RUST_SRC_PATH= "${rustChannels.stable.rust-src}/lib/rustlib/src/rust/src";
   HISTFILE = "${toString ./.}/.bash_history";
   RUST_BACKTRACE = 1;
+  RUST_LOG="INFO";
+  ADVENT_COOKIE_SESSION="<REDACTED>";
 }

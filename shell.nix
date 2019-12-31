@@ -30,6 +30,7 @@ in pkgs.mkShell rec {
     pkgs.httpie
     gitAndTools.pre-commit
     pkgs.rustracer
+    pkgs.graphviz
   ];
   RUST_SRC_PATH= "${rustChannels.stable.rust-src}/lib/rustlib/src/rust/src";
   HISTFILE = "${toString ./.}/.bash_history";

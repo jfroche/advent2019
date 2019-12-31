@@ -11,10 +11,9 @@ run: build
 	@cargo build -q --bin $*
 	@target/debug/$* < input/$*.txt
 
-day5:
+day5 day6:
 	cargo build -q --bin $@
 	target/debug/$@ input/$@.txt
-
 
 .PRECIOUS: input/%.txt
 

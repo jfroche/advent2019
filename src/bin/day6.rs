@@ -2,62 +2,75 @@ use log::*;
 use petgraph::algo::dijkstra;
 use petgraph::dot::{Config, Dot};
 use petgraph::prelude::*;
-use petgraph::Graph;
 use std::fs;
 use std::path::PathBuf;
 use structopt::StructOpt;
 
-// struct OrbitMap {
-// orbits: Vec<(String, String)>,
-// pub map: DiGraphMap<Node, ()>,
-// }
-//
-// impl OrbitMap {
-// fn new(orbits: Vec<(String, String)>) -> Self {
-// Self {
-// map: DiGraphMap::new(),
-// orbits,
-// }
-// }
+struct OrbitMap<'a> {
+    pub map: Graph<&'a str, ()>,
+}
 
-// fn build(mut self) {
-// let mut orbits: Vec<String> = std::mem::replace(&mut self.orbits, Vec::new());
-// for item in orbits {
-// let i: Vec<_> = item.split(')').collect();
-// self.map.add_edge(i[0], i[1], ());
-// }
-// }
-// fn new(code: String) -> Self {
-// let mut g = DiGraphMap::new();
-// let c = code.clone();
-// let mut omap = OrbitMap { map: g, code: c };
-// for item in omap.code.split('\n') {
-// let i: Vec<_> = item.split(')').collect();
-// omap.map.add_edge(i[0], i[1], ());
-// }
-// omap
-// }
-//}
+impl<'a> OrbitMap<'a> {
+    fn new(g: DiGraphMap<&'a str, ()>) -> Self {
+        Self {
+            map: g.into_graph(),
+        }
+    }
 
-fn run(code: &String) {
+    fn distance(&self, origin: &str, destination: Option<&str>) -> usize {
+        let origin_node = self
+            .map
+            .node_indices()
+            .find(|i| self.map[*i] == origin)
+            .unwrap();
+
+        let destination_node = match destination {
+            Some(d) => self.map.node_indices().find(|i| self.map[*i] == d),
+            None => None,
+        };
+        debug!(
+            "Trying to find path between {:?} and {:?}",
+            origin_node, destination_node
+        );
+        let values = dijkstra(&self.map, origin_node, destination_node, |_| 1);
+        debug!("{:?}", values.clone());
+        if destination == None {
+            let values = values.values();
+            values.sum::<usize>()
+        } else {
+            values[&destination_node.expect("unable to find destination")]
+        }
+    }
+
+    #[allow(dead_code)]
+    fn draw(&self) -> Dot<&Graph<&str, ()>> {
+        Dot::with_config(&self.map, &[Config::EdgeNoLabel])
+    }
+}
+
+fn distance(code: &String, origin: &str, destination: Option<&str>) -> usize {
     let codes: Vec<(String, String)> = code
         .split('\n')
         .filter(|c| *c != "")
         .map(|c| {
-            debug!("c: {:?}", c);
             let o: Vec<_> = c.split(')').collect();
             (o[0].to_string(), o[1].to_string())
         })
         .collect();
-    // let mut map = OrbitMap::new(codes);
     let mut g = DiGraphMap::new();
     for ref item in &codes {
         g.add_edge(item.0.as_str(), item.1.as_str(), ());
+        g.add_edge(item.1.as_str(), item.0.as_str(), ());
     }
-    let g: DiGraph<&str, ()> = g.into_graph();
-    debug!("{:?}", Dot::with_config(&g, &[Config::EdgeNoLabel]));
-    let node_map = dijkstra(&g, 349.into(), None, |_| 1);
-    debug!("{:?}", node_map.values().sum::<i32>());
+    OrbitMap::new(g).distance(origin, destination)
+}
+
+fn part_one(code: &String) -> usize {
+    distance(code, "COM", None)
+}
+
+fn part_two(code: &String) -> usize {
+    distance(code, "SAN", Some("YOU")) - 2
 }
 
 #[cfg(test)]
@@ -66,7 +79,6 @@ mod tests {
 
     #[test]
     fn test_basic_map() {
-        advent::init_logging();
         let map_string = "COM)B
 B)C
 C)D
@@ -79,7 +91,27 @@ E)J
 J)K
 K)L"
         .to_string();
-        run(&map_string);
+        assert_eq!(distance(&map_string, "COM", None), 42);
+        assert_eq!(distance(&map_string, "B", Some("E")), 3);
+    }
+
+    #[test]
+    fn test_shortest_path() {
+        let map_string = "COM)B
+B)C
+C)D
+D)E
+E)F
+B)G
+G)H
+D)I
+E)J
+J)K
+K)L
+K)YOU
+I)SAN"
+            .to_string();
+        assert_eq!(distance(&map_string, "YOU", Some("SAN")), 6);
     }
 }
 
@@ -101,5 +133,8 @@ fn main() {
     advent::init_logging();
     let buffer = fs::read_to_string(opt.input).expect("Unable to read input file");
     debug!("{:?}", buffer);
-    run(&buffer);
+    let sum = part_one(&buffer);
+    info!("part one: {}", sum);
+    let sum = part_two(&buffer);
+    info!("part two: {}", sum);
 }

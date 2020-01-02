@@ -11,7 +11,7 @@ run: build
 	@cargo build -q --bin $*
 	@target/debug/$* < input/$*.txt
 
-day5 day6:
+day5 day6 day7:
 	cargo build -q --bin $@
 	target/debug/$@ input/$@.txt
 
@@ -28,4 +28,4 @@ lint:
 	pre-commit run --all
 
 fmt:
-	find . -name '*.rs' -exec rustfmt {} \;
+	find . -name '*.rs' -exec rustfmt --edition 2018 {} \;

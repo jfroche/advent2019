@@ -86,7 +86,6 @@ mod tests {
 
     #[test]
     fn test_filter_password() {
-        advent::init_logging();
         let pwd = filter_passwords(111111, 111112);
         info!("{:?}", pwd);
         assert!(pwd == vec![int_to_char(111111)]);

@@ -361,7 +361,6 @@ mod tests {
 
     #[test]
     fn test_step_count() {
-        advent::init_logging();
         let w1 = create_wire_from_string("R8,U5,L5,D3".to_string());
         assert_eq!(w1.step_to_intersection(Point::new(3, 0)), 3);
         assert_eq!(w1.step_to_intersection(Point::new(3, 3)), 20);

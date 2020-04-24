@@ -15,6 +15,10 @@ day5 day6 day7:
 	cargo build -q --bin $@
 	target/debug/$@ input/$@.txt
 
+day8:
+	cargo build -q --bin $@
+	target/debug/$@ --width 25 --height 6 input/$@.txt
+
 .PRECIOUS: input/%.txt
 
 input/%.txt:

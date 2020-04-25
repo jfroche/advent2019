@@ -1,0 +1,5 @@
+= Advent of Code 2019 with Rust
+
+My experiment in Rust with advent of code
+
+https://adventofcode.com/2019

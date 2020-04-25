@@ -15,7 +15,7 @@ let
     pkgs.lib.mapAttrs
       (_: v: pkgs.rustChannelOf v)
       (import ./nix/rust-channels.nix {
-        stableVersion = "1.38.0";
+        stableVersion = "1.43.0";
       });
 in pkgs.mkShell rec {
   name = "advent-of-code";

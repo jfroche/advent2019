@@ -2,7 +2,7 @@
 {
   nightly = {
     channel = "nightly";
-    date = "2019-10-23";
+    date = "2020-04-24";
   };
   stable = {
     channel = stableVersion;

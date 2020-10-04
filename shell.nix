@@ -15,7 +15,7 @@ let
     pkgs.lib.mapAttrs
       (_: v: pkgs.rustChannelOf v)
       (import ./nix/rust-channels.nix {
-        stableVersion = "1.43.0";
+        stableVersion = "1.46.0";
       });
 in pkgs.mkShell rec {
   name = "advent-of-code";
@@ -26,11 +26,15 @@ in pkgs.mkShell rec {
     pkgs.cargo-release
     pkgs.rustfmt
     rustChannels.nightly.rust
+    pkgs.rustup
     pkgs.carnix
     pkgs.httpie
     gitAndTools.pre-commit
     pkgs.rustracer
     pkgs.graphviz
+    pkgs.rls
+    pkgs.niv
+    pkgs.clippy
   ];
   RUST_SRC_PATH= "${rustChannels.stable.rust-src}/lib/rustlib/src/rust/src";
   HISTFILE = "${toString ./.}/.bash_history";

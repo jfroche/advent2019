@@ -14,7 +14,7 @@ run: build  ## Run a specific day using variable: make run DAY=3
 	@cargo build -q --bin $*
 	@target/debug/$* < input/$*.txt
 
-day5 day6 day7:
+day5 day6 day7 day10:
 	cargo build -q --bin $@
 	target/debug/$@ input/$@.txt
 
@@ -28,7 +28,6 @@ input/%.txt:
 	http -o input/$*.txt https://adventofcode.com/2019/day/$(subst day,,$*)/input Cookie:session=$(ADVENT_COOKIE_SESSION)
 
 test:  ## Run all the tests
-	echo $(RUST_LOG)
 	cargo test
 
 lint:  ## Lint all the code

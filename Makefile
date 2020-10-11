@@ -14,7 +14,7 @@ run: build  ## Run a specific day using variable: make run DAY=3
 	@cargo build -q --bin $*
 	@target/debug/$* < input/$*.txt
 
-day5 day6 day7 day10:
+day5 day6 day7 day9 day10:
 	cargo build -q --bin $@
 	target/debug/$@ input/$@.txt
 
